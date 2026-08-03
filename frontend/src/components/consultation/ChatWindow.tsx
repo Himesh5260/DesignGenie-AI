@@ -12,6 +12,7 @@ export default function ChatWindow() {
   ]);
 
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -24,6 +25,9 @@ export default function ChatWindow() {
 
     setMessages((prev) => [...prev, userMessage]);
 
+    setInput("");
+    setIsLoading(true);
+
     const response = await sendConsultationMessage(input);
 
     const aiMessage: Message = {
@@ -34,7 +38,7 @@ export default function ChatWindow() {
 
     setMessages((prev) => [...prev, aiMessage]);
 
-    setInput("");
+    setIsLoading(false);
   };
 
   return (
@@ -48,6 +52,12 @@ export default function ChatWindow() {
             {message.text}
           </div>
         ))}
+
+        {isLoading && (
+          <div>
+            <strong>AI:</strong> Typing...
+          </div>
+        )}
       </div>
 
       <div>
