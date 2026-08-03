@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { sendConsultationMessage } from "../../services/consultationService";
-
-type Message = {
-  id: number;
-  sender: "user" | "ai";
-  text: string;
-};
+import type { Message } from "../../types/message";
 
 export default function ChatWindow() {
   const [messages, setMessages] = useState<Message[]>([
@@ -21,9 +16,9 @@ export default function ChatWindow() {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const userMessage = {
+    const userMessage: Message = {
       id: Date.now(),
-      sender: "user" as const,
+      sender: "user",
       text: input,
     };
 
@@ -31,9 +26,9 @@ export default function ChatWindow() {
 
     const response = await sendConsultationMessage(input);
 
-    const aiMessage = {
+    const aiMessage: Message = {
       id: Date.now() + 1,
-      sender: "ai" as const,
+      sender: "ai",
       text: response.message,
     };
 
