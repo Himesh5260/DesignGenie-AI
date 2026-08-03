@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react";
 import type { Message } from "../../types/message";
+import TypingIndicator from "./TypingIndicator";
 import "../../styles/chat.css";
 
 type ChatMessagesProps = {
@@ -10,6 +12,14 @@ export default function ChatMessages({
   messages,
   isLoading,
 }: ChatMessagesProps) {
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, isLoading]);
+
   return (
     <div className="chat-messages">
       {messages.map((message) => (
@@ -23,13 +33,9 @@ export default function ChatMessages({
         </div>
       ))}
 
-      {isLoading && (
-        <div className="message ai">
-          <div className="bubble typing">
-            AI is typing...
-          </div>
-        </div>
-      )}
+      {isLoading && <TypingIndicator />}
+
+      <div ref={bottomRef} />
     </div>
   );
 }

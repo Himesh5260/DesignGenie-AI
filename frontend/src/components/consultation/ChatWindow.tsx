@@ -37,6 +37,14 @@ export default function ChatWindow() {
       };
 
       setMessages((prev) => [...prev, aiMessage]);
+    } catch {
+      const errorMessage: Message = {
+        id: Date.now() + 1,
+        sender: "ai",
+        text: "Sorry, something went wrong. Please try again.",
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +61,10 @@ export default function ChatWindow() {
         isLoading={isLoading}
       />
 
-      <ChatInput onSend={handleSend} />
+      <ChatInput
+        onSend={handleSend}
+        disabled={isLoading}
+      />
     </div>
   );
 }
