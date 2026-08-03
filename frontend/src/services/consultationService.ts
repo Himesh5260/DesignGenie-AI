@@ -1,8 +1,5 @@
 import { API_ENDPOINTS } from "../config/api";
-
-type ConsultationResponse = {
-  message: string;
-};
+import type { ConsultationResponse } from "../types/consultation";
 
 
 export async function sendConsultationMessage(
