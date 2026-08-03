@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 
 type SidebarItemProps = {
@@ -13,13 +13,19 @@ function SidebarItem({
   icon: Icon,
 }: SidebarItemProps) {
   return (
-    <Link
+    <NavLink
       to={to}
-      className="flex items-center gap-3 rounded-xl px-4 py-3 text-gray-300 transition hover:bg-emerald-500 hover:text-white"
+      className={({ isActive }) =>
+        `flex items-center gap-3 rounded-xl px-4 py-3 transition ${
+          isActive
+            ? "bg-emerald-500 text-white"
+            : "text-gray-300 hover:bg-white/10 hover:text-white"
+        }`
+      }
     >
       <Icon size={20} />
       <span>{label}</span>
-    </Link>
+    </NavLink>
   );
 }
 
