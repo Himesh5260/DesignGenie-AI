@@ -10,7 +10,7 @@ import SidebarItem from "./SidebarItem";
 
 function Sidebar() {
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 border-r border-white/10 bg-neutral-900 p-6">
+    <aside className="fixed left-0 top-0 hidden h-screen w-64 border-r border-white/10 bg-neutral-900 p-6 md:block">
 
       <h1 className="mb-10 text-2xl font-bold text-white">
         DesignGenie AI
