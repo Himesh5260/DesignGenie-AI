@@ -1,8 +1,10 @@
+import { useState } from "react";
+
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 
 function ChatWindow() {
-  const messages = [
+  const [messages, setMessages] = useState([
     {
       sender: "ai" as const,
       message:
@@ -18,7 +20,24 @@ function ChatWindow() {
       message:
         "Great choice. I recommend neutral colors, wooden textures, and minimalist furniture.",
     },
-  ];
+  ]);
+
+
+  function handleSend(message: string) {
+    setMessages((previous) => [
+      ...previous,
+      {
+        sender: "user" as const,
+        message,
+      },
+      {
+        sender: "ai" as const,
+        message:
+          "I am analyzing your design requirements. I will suggest ideas soon.",
+      },
+    ]);
+  }
+
 
   return (
     <div className="flex h-[600px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-neutral-950">
@@ -33,43 +52,12 @@ function ChatWindow() {
           />
         ))}
 
-
-        <div className="flex items-center gap-3">
-
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20">
-
-            <span className="text-lg">
-              🤖
-            </span>
-
-          </div>
-
-
-          <div className="rounded-2xl border border-white/10 bg-neutral-900 px-5 py-3">
-
-            <p className="text-xs text-gray-400">
-              DesignGenie AI
-            </p>
-
-
-            <div className="mt-2 flex gap-1">
-
-              <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400"></span>
-
-              <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
-
-              <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
-
-            </div>
-
-          </div>
-
-        </div>
-
       </div>
 
 
-      <ChatInput />
+      <ChatInput
+        onSend={handleSend}
+      />
 
     </div>
   );
