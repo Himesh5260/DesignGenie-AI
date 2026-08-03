@@ -18,9 +18,9 @@ function RecentProjects() {
   ];
 
   return (
-    <div className="mt-8 rounded-2xl border border-white/10 bg-neutral-900 p-6">
+    <div className="mt-8 rounded-2xl border border-white/10 bg-neutral-900 p-6 transition hover:border-emerald-500/30">
 
-      <h2 className="mb-5 text-xl font-semibold">
+      <h2 className="mb-5 text-xl font-semibold text-white">
         Recent Projects
       </h2>
 
@@ -30,11 +30,11 @@ function RecentProjects() {
         {projects.map((project) => (
           <div
             key={project.name}
-            className="flex items-center justify-between rounded-xl border border-white/10 p-4"
+            className="flex items-center justify-between rounded-xl border border-white/10 p-4 transition hover:bg-white/5"
           >
 
             <div>
-              <h3 className="font-semibold">
+              <h3 className="font-semibold text-white">
                 {project.name}
               </h3>
 
