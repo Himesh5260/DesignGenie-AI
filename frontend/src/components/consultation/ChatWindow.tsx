@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { sendConsultationMessage } from "../../services/consultationService";
 import type { Message } from "../../types/message";
+import ChatMessages from "./ChatMessage";
+import ChatInput from "./ChatInput";
+import "../../styles/chat.css";
 
 export default function ChatWindow() {
   const [messages, setMessages] = useState<Message[]>([
@@ -11,12 +14,9 @@ export default function ChatWindow() {
     },
   ]);
 
-  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
-
+  const handleSend = async (input: string) => {
     const userMessage: Message = {
       id: Date.now(),
       sender: "user",
@@ -25,52 +25,35 @@ export default function ChatWindow() {
 
     setMessages((prev) => [...prev, userMessage]);
 
-    setInput("");
     setIsLoading(true);
 
-    const response = await sendConsultationMessage(input);
+    try {
+      const response = await sendConsultationMessage(input);
 
-    const aiMessage: Message = {
-      id: Date.now() + 1,
-      sender: "ai",
-      text: response.message,
-    };
+      const aiMessage: Message = {
+        id: Date.now() + 1,
+        sender: "ai",
+        text: response.message,
+      };
 
-    setMessages((prev) => [...prev, aiMessage]);
-
-    setIsLoading(false);
+      setMessages((prev) => [...prev, aiMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div>
-      <div>
-        {messages.map((message) => (
-          <div key={message.id}>
-            <strong>
-              {message.sender === "user" ? "You" : "AI"}:
-            </strong>{" "}
-            {message.text}
-          </div>
-        ))}
-
-        {isLoading && (
-          <div>
-            <strong>AI:</strong> Typing...
-          </div>
-        )}
+    <div className="chat-window">
+      <div className="chat-header">
+        AI Design Consultant
       </div>
 
-      <div>
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Describe your design idea..."
-        />
+      <ChatMessages
+        messages={messages}
+        isLoading={isLoading}
+      />
 
-        <button onClick={handleSend}>
-          Send
-        </button>
-      </div>
+      <ChatInput onSend={handleSend} />
     </div>
   );
 }

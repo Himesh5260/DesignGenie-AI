@@ -1,51 +1,39 @@
-import { Send } from "lucide-react";
 import { useState } from "react";
+import "../../styles/chat.css";
 
 type ChatInputProps = {
   onSend: (message: string) => void;
 };
 
-function ChatInput({
-  onSend,
-}: ChatInputProps) {
-  const [message, setMessage] = useState("");
+export default function ChatInput({ onSend }: ChatInputProps) {
+  const [input, setInput] = useState("");
 
-  function handleSend() {
-    if (!message.trim()) return;
+  const handleSend = () => {
+    if (!input.trim()) return;
 
-    onSend(message);
+    onSend(input);
+    setInput("");
+  };
 
-    setMessage("");
-  }
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSend();
+    }
+  };
 
   return (
-    <div className="flex gap-3 border-t border-white/10 bg-neutral-950 p-4">
-
+    <div className="chat-input">
       <input
-        value={message}
-        onChange={(event) =>
-          setMessage(event.target.value)
-        }
-        onKeyDown={(event) => {
-          if (event.key === "Enter") {
-            handleSend();
-          }
-        }}
         type="text"
-        placeholder="Describe your room..."
-        className="flex-1 rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-white outline-none placeholder:text-gray-500 focus:border-emerald-500"
+        value={input}
+        placeholder="Describe your design idea..."
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
 
-
-      <button
-        onClick={handleSend}
-        className="flex items-center justify-center rounded-xl bg-emerald-500 px-5 text-white transition hover:bg-emerald-600"
-      >
-        <Send size={20} />
+      <button onClick={handleSend}>
+        Send
       </button>
-
     </div>
   );
 }
-
-export default ChatInput;
