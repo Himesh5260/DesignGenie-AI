@@ -28,7 +28,11 @@ export default function ChatMessages({
           className={`message ${message.sender}`}
         >
           <div className="bubble">
-            {message.text}
+            <p>{message.text}</p>
+
+            <span className="timestamp">
+              {message.timestamp}
+            </span>
           </div>
         </div>
       ))}

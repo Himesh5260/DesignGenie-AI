@@ -3,6 +3,7 @@ import { sendConsultationMessage } from "../../services/consultationService";
 import type { Message } from "../../types/message";
 import ChatMessages from "./ChatMessage";
 import ChatInput from "./ChatInput";
+import SuggestedPrompts from "./SuggestedPrompts";
 import "../../styles/chat.css";
 
 export default function ChatWindow() {
@@ -11,16 +12,24 @@ export default function ChatWindow() {
       id: 1,
       sender: "ai",
       text: "Hello! I am your AI design consultant. How can I help you today?",
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     },
   ]);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = async (input: string) => {
+  const sendMessage = async (text: string) => {
     const userMessage: Message = {
       id: Date.now(),
       sender: "user",
-      text: input,
+      text,
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -28,33 +37,72 @@ export default function ChatWindow() {
     setIsLoading(true);
 
     try {
-      const response = await sendConsultationMessage(input);
+      const response = await sendConsultationMessage(text);
 
-      const aiMessage: Message = {
-        id: Date.now() + 1,
-        sender: "ai",
-        text: response.message,
-      };
-
-      setMessages((prev) => [...prev, aiMessage]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          sender: "ai",
+          text: response.message,
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+      ]);
     } catch {
-      const errorMessage: Message = {
-        id: Date.now() + 1,
-        sender: "ai",
-        text: "Sorry, something went wrong. Please try again.",
-      };
-
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          sender: "ai",
+          text: "Something went wrong. Please try again.",
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const clearChat = () => {
+    setMessages([
+      {
+        id: 1,
+        sender: "ai",
+        text: "Hello! I am your AI design consultant. How can I help you today?",
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    ]);
+  };
+
   return (
     <div className="chat-window">
       <div className="chat-header">
-        AI Design Consultant
+        <div>
+          <h2>AI Design Consultant</h2>
+          <p>Powered by DesignGenie AI</p>
+        </div>
+
+        <button
+          className="clear-chat"
+          onClick={clearChat}
+        >
+          Clear Chat
+        </button>
       </div>
+
+      <SuggestedPrompts
+        onSelect={sendMessage}
+        disabled={isLoading}
+      />
 
       <ChatMessages
         messages={messages}
@@ -62,7 +110,7 @@ export default function ChatWindow() {
       />
 
       <ChatInput
-        onSend={handleSend}
+        onSend={sendMessage}
         disabled={isLoading}
       />
     </div>
