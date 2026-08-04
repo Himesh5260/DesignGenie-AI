@@ -3,7 +3,23 @@ import SelectField from "./SelectField";
 import TextAreaField from "./TextAreaField";
 import "../../styles/generation.css";
 
-export default function GenerationForm() {
+type GenerationRequest = {
+  roomType: string;
+  designStyle: string;
+  budget: string;
+  colorPalette: string;
+  additionalRequirements: string;
+};
+
+type GenerationFormProps = {
+  disabled?: boolean;
+  onGenerate: (data: GenerationRequest) => void;
+};
+
+export default function GenerationForm({
+  disabled = false,
+  onGenerate,
+}: GenerationFormProps) {
   const [roomType, setRoomType] = useState("Bedroom");
   const [designStyle, setDesignStyle] = useState("Modern");
   const [budget, setBudget] = useState("Medium");
@@ -12,7 +28,9 @@ export default function GenerationForm() {
     useState("");
 
   const handleGenerate = () => {
-    console.log({
+    if (disabled) return;
+
+    onGenerate({
       roomType,
       designStyle,
       budget,
@@ -54,11 +72,7 @@ export default function GenerationForm() {
       <SelectField
         label="Budget"
         value={budget}
-        options={[
-          "Low",
-          "Medium",
-          "High",
-        ]}
+        options={["Low", "Medium", "High"]}
         onChange={setBudget}
       />
 
@@ -84,6 +98,7 @@ export default function GenerationForm() {
 
       <button
         className="generate-button"
+        disabled={disabled}
         onClick={handleGenerate}
       >
         Generate Design

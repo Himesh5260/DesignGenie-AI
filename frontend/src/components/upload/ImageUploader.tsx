@@ -1,8 +1,10 @@
 type ImageUploaderProps = {
+  image: File | null;
   onImageSelect: (file: File) => void;
 };
 
 export default function ImageUploader({
+  image,
   onImageSelect,
 }: ImageUploaderProps) {
   const handleChange = (
@@ -11,6 +13,11 @@ export default function ImageUploader({
     const file = event.target.files?.[0];
 
     if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image.");
+      return;
+    }
 
     onImageSelect(file);
   };
@@ -27,6 +34,19 @@ export default function ImageUploader({
         accept="image/*"
         onChange={handleChange}
       />
+
+      {image && (
+        <div className="upload-info">
+          <p>
+            <strong>File:</strong> {image.name}
+          </p>
+
+          <p>
+            <strong>Size:</strong>{" "}
+            {(image.size / 1024 / 1024).toFixed(2)} MB
+          </p>
+        </div>
+      )}
     </div>
   );
 }

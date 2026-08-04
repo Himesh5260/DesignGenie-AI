@@ -8,7 +8,13 @@ export default function ImagePreview({
   if (!image) {
     return (
       <div className="image-preview empty">
-        <p>No image selected</p>
+        <div className="empty-content">
+          <h3>No Image Selected</h3>
+
+          <p>
+            Upload a room image to preview it here.
+          </p>
+        </div>
       </div>
     );
   }
