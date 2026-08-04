@@ -1,21 +1,13 @@
-import EmptyState from "../components/dashboard/EmptyState";
+import UploadSection from "../components/upload/UploadSection";
 
-function UploadRoomPage() {
+export default function UploadRoomPage() {
   return (
     <div>
-
-      <h2 className="mb-6 text-2xl font-semibold text-white">
+      <h2 className="mb-6 text-2xl font-semibold">
         Upload Room
       </h2>
 
-
-      <EmptyState
-        title="Upload your room image"
-        description="Start your interior transformation by uploading a room photo."
-      />
-
+      <UploadSection />
     </div>
   );
 }
-
-export default UploadRoomPage;
