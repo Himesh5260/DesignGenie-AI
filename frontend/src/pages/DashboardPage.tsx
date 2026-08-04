@@ -1,45 +1,49 @@
-import StatCard from "../components/dashboard/StatCard";
-import RecentProjects from "../components/dashboard/RecentProjects";
 import QuickActions from "../components/dashboard/QuickActions";
+import RecentProjects from "../components/dashboard/RecentProjects";
+import StatCard from "../components/dashboard/StatCard";
 
 function DashboardPage() {
   return (
-    <div>
+    <div className="space-y-10">
 
-      <h2 className="mb-6 text-2xl font-semibold text-white">
-        Dashboard Overview
-      </h2>
+      <section>
 
+        <h1 className="text-5xl font-bold text-white">
+          Dashboard
+        </h1>
 
-      <div className="grid gap-6 md:grid-cols-3">
+        <p className="mt-3 max-w-2xl text-lg leading-8 text-slate-400">
+          Manage your AI-generated interior designs, upload new rooms,
+          consult with AI, and track all your design projects.
+        </p>
+
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-3">
 
         <StatCard
           title="Projects"
           value="12"
-          description="Total design projects"
+          description="Active interior design projects"
         />
-
 
         <StatCard
           title="AI Designs"
           value="48"
-          description="Generated designs"
+          description="Designs successfully generated"
         />
-
 
         <StatCard
           title="Consultations"
-          value="7"
-          description="AI sessions completed"
+          value="07"
+          description="AI design consultation sessions"
         />
 
-      </div>
-
-
-      <RecentProjects />
-
+      </section>
 
       <QuickActions />
+
+      <RecentProjects />
 
     </div>
   );

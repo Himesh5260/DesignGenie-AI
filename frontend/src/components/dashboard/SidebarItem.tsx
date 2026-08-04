@@ -16,14 +16,18 @@ function SidebarItem({
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex items-center gap-3 rounded-xl px-4 py-3 transition ${
+        `group flex items-center gap-4 rounded-2xl px-5 py-4 font-medium transition-all duration-300 ${
           isActive
-            ? "bg-emerald-500 text-white"
-            : "text-gray-300 hover:bg-white/10 hover:text-white"
+            ? "bg-gradient-to-r from-blue-600 to-violet-600 text-white shadow-lg shadow-blue-900/20"
+            : "text-slate-400 hover:bg-slate-900 hover:text-white"
         }`
       }
     >
-      <Icon size={20} />
+      <Icon
+        size={21}
+        className="transition-transform duration-300 group-hover:scale-110"
+      />
+
       <span>{label}</span>
     </NavLink>
   );

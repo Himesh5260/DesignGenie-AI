@@ -20,7 +20,7 @@ export default function GenerationForm({
   disabled = false,
   onGenerate,
 }: GenerationFormProps) {
-  const [roomType, setRoomType] = useState("Bedroom");
+  const [roomType, setRoomType] = useState("Living Room");
   const [designStyle, setDesignStyle] = useState("Modern");
   const [budget, setBudget] = useState("Medium");
   const [colorPalette, setColorPalette] = useState("Neutral");
@@ -41,17 +41,18 @@ export default function GenerationForm({
 
   return (
     <div className="generation-form">
-      <h2>AI Interior Design Generator</h2>
+
+      <h2>Design Preferences</h2>
 
       <SelectField
         label="Room Type"
         value={roomType}
         options={[
-          "Bedroom",
           "Living Room",
+          "Bedroom",
           "Kitchen",
-          "Office",
           "Bathroom",
+          "Office",
         ]}
         onChange={setRoomType}
       />
@@ -61,8 +62,8 @@ export default function GenerationForm({
         value={designStyle}
         options={[
           "Modern",
-          "Minimalist",
           "Luxury",
+          "Minimalist",
           "Industrial",
           "Scandinavian",
         ]}
@@ -72,7 +73,11 @@ export default function GenerationForm({
       <SelectField
         label="Budget"
         value={budget}
-        options={["Low", "Medium", "High"]}
+        options={[
+          "Low",
+          "Medium",
+          "High",
+        ]}
         onChange={setBudget}
       />
 
@@ -83,16 +88,16 @@ export default function GenerationForm({
           "Neutral",
           "Warm",
           "Cool",
-          "Monochrome",
           "Earthy",
+          "Monochrome",
         ]}
         onChange={setColorPalette}
       />
 
       <TextAreaField
         label="Additional Requirements"
+        placeholder="Example: Keep wooden flooring, add indoor plants, maximize natural lighting..."
         value={additionalRequirements}
-        placeholder="Describe any additional design preferences..."
         onChange={setAdditionalRequirements}
       />
 
@@ -103,6 +108,7 @@ export default function GenerationForm({
       >
         Generate Design
       </button>
+
     </div>
   );
 }
