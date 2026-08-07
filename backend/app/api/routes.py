@@ -83,24 +83,36 @@ def create_project(payload: dict):
     if not generated_image:
         raise HTTPException(status_code=400, detail="generated_image is required")
 
+    # Map to DB model fields: image_path and recommendation JSON
+    recommendation = {
+        "style": style,
+        "room_type": room_type,
+        "preferences": preferences,
+    }
+
     db = SessionLocal()
     try:
         project = Project(
-            generated_image_url=generated_image,
+            image_path=generated_image,
             style=style,
             room_type=room_type,
             preferences=preferences,
+            recommendation=recommendation,
         )
         db.add(project)
         db.commit()
         db.refresh(project)
         return {"status": "success", "project": {
             "id": project.id,
-            "generated_image": project.generated_image_url,
+            "generated_image": project.image_path,
             "style": project.style,
             "room_type": project.room_type,
             "preferences": project.preferences,
+            "recommendation": project.recommendation,
             "created_at": project.created_at.isoformat()
         }}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         db.close()
