@@ -1,5 +1,5 @@
 ﻿from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Query
-from typing import Optional
+from typing import Optional, List
 import os
 from pathlib import Path
 import shutil
@@ -43,7 +43,7 @@ async def generate(
     use_mock = mock or MOCK_GENERATE_ENV
     if use_mock:
         # Return a canned image URL for testing (no external AI call)
-        canned_url = "https://picsum.photos/seed/designgenie/1024/576"
+        canned_url = os.getenv("DESIGNGENIE_FALLBACK_IMAGE", "https://picsum.photos/seed/designgenie/1024/576")
         return {
             "status": "success",
             "message": "Design generated (mock)",
@@ -114,5 +114,27 @@ def create_project(payload: dict):
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
+
+
+@router.get("/projects")
+def list_projects(limit: int = 50):
+    """Return recent projects, ordered by created_at desc."""
+    db = SessionLocal()
+    try:
+        projects = db.query(Project).order_by(Project.created_at.desc()).limit(limit).all()
+        results = []
+        for p in projects:
+            results.append({
+                "id": p.id,
+                "generated_image": p.image_path,
+                "style": p.style,
+                "room_type": p.room_type,
+                "preferences": p.preferences,
+                "recommendation": p.recommendation,
+                "created_at": p.created_at.isoformat() if p.created_at else None,
+            })
+        return {"status": "success", "projects": results}
     finally:
         db.close()
