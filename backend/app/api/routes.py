@@ -1,4 +1,4 @@
-﻿from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+﻿from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Query
 from typing import Optional
 import os
 from pathlib import Path
@@ -16,13 +16,12 @@ init_db()
 UPLOADS_DIR = Path(__file__).resolve().parents[2] / "uploads"
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
+MOCK_GENERATE_ENV = os.getenv("MOCK_GENERATE", "false").lower() in ("1", "true", "yes")
+
 
 @router.get("/health")
 def health_check():
-    return {
-        "status": "healthy",
-        "service": "DesignGenie AI Backend"
-    }
+    return {"status": "healthy", "service": "DesignGenie AI Backend"}
 
 
 @router.post("/generate")
@@ -30,14 +29,33 @@ async def generate(
     image: UploadFile = File(...),
     room_type: str = Form(...),
     style: str = Form(...),
-    preferences: Optional[str] = Form("")
+    preferences: Optional[str] = Form(""),
+    mock: bool = Query(False),
 ):
+    """Generates a design. Use ?mock=true to return a canned image without calling the AI provider.
+    Also honors MOCK_GENERATE=true in the environment.
+    """
     # Save uploaded file locally (filename is used by generate_design)
     dest_path = UPLOADS_DIR / image.filename
     with open(dest_path, "wb") as f:
         shutil.copyfileobj(image.file, f)
 
-    # Call service
+    use_mock = mock or MOCK_GENERATE_ENV
+    if use_mock:
+        # Return a canned image URL for testing (no external AI call)
+        canned_url = "https://picsum.photos/seed/designgenie/1024/576"
+        return {
+            "status": "success",
+            "message": "Design generated (mock)",
+            "generated_image": canned_url,
+            "recommendation": {
+                "style": style,
+                "room_type": room_type,
+                "preferences": preferences,
+            },
+        }
+
+    # Call service (real AI path)
     result = generate_design(
         image_name=str(dest_path),
         room_type=room_type,
