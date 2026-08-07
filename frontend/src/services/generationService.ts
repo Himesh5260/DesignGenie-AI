@@ -49,3 +49,12 @@ export async function saveProject(payload: {
 
   return response.json();
 }
+
+export async function getProjects() {
+  const response = await fetch(`${API_BASE_URL}/projects`);
+  if (!response.ok) {
+    const txt = await response.text().catch(() => null);
+    throw new Error(txt || 'Failed to fetch projects');
+  }
+  return response.json();
+}
